@@ -1,0 +1,296 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Cinema - Now Playing Movies That Don't Exist</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="cinema-container">
+        <header>
+            <div class="logo">
+                <div class="projector">
+                    <svg viewBox="0 0 100 60" class="projector-svg">
+                        <rect x="30" y="10" width="40" height="25" rx="5" fill="#333" />
+                        <rect x="45" y="35" width="10" height="10" fill="#333" />
+                        <ellipse cx="50" cy="50" rx="20" ry="5" fill="#333" />
+                        <path d="M50 10 L80 0 L80 5 L50 15 Z" fill="#444" />
+                        <path d="M50 35 L100 60 L100 40 L50 15 Z" fill="#555" opacity="0.6" class="light-beam" />
+                    </svg>
+                </div>
+                <h1>AI Cinema</h1>
+            </div>
+            <div class="tagline">Now Playing Movies That Don't Exist</div>
+        </header>
+        
+        <div class="generate-section" id="generate-section">
+            <h2>Create Your Own Imaginary Feature Film</h2>
+            <div class="generate-form">
+                <input type="text" id="movie-prompt" placeholder="Enter a movie concept..." />
+                <button id="generate-button">Generate Movie</button>
+            </div>
+            
+            <div class="options-section">
+                <div class="options-column">
+                    <div class="options-group">
+                        <div class="options-title">Genres:</div>
+                        <div class="options-row">
+                            <label><input type="checkbox" name="genre" value="Action"> Action</label>
+                            <label><input type="checkbox" name="genre" value="Drama"> Drama</label>
+                            <label><input type="checkbox" name="genre" value="Comedy"> Comedy</label>
+                            <label><input type="checkbox" name="genre" value="Sci-Fi"> Sci-Fi</label>
+                            <label><input type="checkbox" name="genre" value="Horror"> Horror</label>
+                            <label><input type="checkbox" name="genre" value="Fantasy"> Fantasy</label>
+                            <label><input type="checkbox" name="genre" value="Romance"> Romance</label>
+                            <label><input type="checkbox" name="genre" value="Thriller"> Thriller</label>
+                        </div>
+                    </div>
+                    
+                    <div class="options-group">
+                        <div class="options-title">Themes:</div>
+                        <div class="options-row">
+                            <label><input type="checkbox" name="theme" value="Slice of Life"> Slice of Life</label>
+                            <label><input type="checkbox" name="theme" value="Romance"> Romance</label>
+                            <label><input type="checkbox" name="theme" value="Coming of Age"> Coming of Age</label>
+                            <label><input type="checkbox" name="theme" value="Revenge"> Revenge</label>
+                            <label><input type="checkbox" name="theme" value="Identity"> Identity</label>
+                            <label><input type="checkbox" name="theme" value="Psychological"> Psychological</label>
+                            <label><input type="checkbox" name="theme" value="Light Hearted"> Light Hearted</label>
+                            <label><input type="checkbox" name="theme" value="Family"> Family</label>
+                        </div>
+                    </div>
+                    
+                    <div class="options-group">
+                        <div class="options-title">Visual Style:</div>
+                        <div class="options-row">
+                            <label><input type="radio" name="style" value="Vibrant and energetic with rich color palettes"> Vibrant</label>
+                            <label><input type="radio" name="style" value="Dark and gritty with high contrast cinematography"> Dark & Gritty</label>
+                            <label><input type="radio" name="style" value="Stylized animation with distinctive artistic direction"> Animation</label>
+                            <label><input type="radio" name="style" value="Japanese anime style with distinctive visual flair"> Anime</label>
+                            <label><input type="radio" name="style" value="Raw documentary style with natural lighting"> Documentary</label>
+                            <label><input type="radio" name="style" value="Dreamlike and surreal visuals with ethereal qualities"> Surreal</label>
+                            <label><input type="radio" name="style" value="Classic Hollywood glamour with polished aesthetics"> Classic</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="options-column">
+                    <div class="options-group">
+                        <div class="options-title">Target Audience:</div>
+                        <div class="options-row">
+                            <label><input type="checkbox" name="audience" value="Family"> Family</label>
+                            <label><input type="checkbox" name="audience" value="Young Adult"> Young Adult</label>
+                            <label><input type="checkbox" name="audience" value="Adult"> Adult</label>
+                            <label><input type="checkbox" name="audience" value="Children"> Children</label>
+                            <label><input type="checkbox" name="audience" value="Mature"> Mature</label>
+                        </div>
+                    </div>
+                    
+                    <div class="options-group">
+                        <div class="options-title">Setting:</div>
+                        <div class="options-row">
+                            <label><input type="radio" name="setting" value="Urban City"> Urban</label>
+                            <label><input type="radio" name="setting" value="Rural Countryside"> Rural</label>
+                            <label><input type="radio" name="setting" value="Futuristic World"> Futuristic</label>
+                            <label><input type="radio" name="setting" value="Medieval Fantasy"> Medieval</label>
+                            <label><input type="radio" name="setting" value="Post-Apocalyptic"> Post-Apocalyptic</label>
+                            <label><input type="radio" name="setting" value="Historical Period"> Historical</label>
+                        </div>
+                    </div>
+                    
+                    <div class="options-group">
+                        <div class="options-title">Movie Length:</div>
+                        <div class="options-row">
+                            <label><input type="radio" name="length" value="Short (under 90 minutes)"> Short</label>
+                            <label><input type="radio" name="length" value="Standard (90-120 minutes)"> Standard</label>
+                            <label><input type="radio" name="length" value="Epic (over 2 hours)"> Epic</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="loading-indicator" id="loading-indicator">
+                <div class="film-reel">
+                    <svg viewBox="0 0 100 100" class="reel-svg" style="width: 50px; height: 50px;">
+                        <circle cx="50" cy="50" r="45" fill="#222" stroke="#444" stroke-width="2" />
+                        <circle cx="50" cy="50" r="10" fill="#444" />
+                        <circle cx="50" cy="15" r="8" fill="#333" stroke="#555" stroke-width="1" />
+                        <circle cx="50" cy="85" r="8" fill="#333" stroke="#555" stroke-width="1" />
+                        <circle cx="15" cy="50" r="8" fill="#333" stroke="#555" stroke-width="1" />
+                        <circle cx="85" cy="50" r="8" fill="#333" stroke="#555" stroke-width="1" />
+                        <circle cx="26" cy="26" r="8" fill="#333" stroke="#555" stroke-width="1" />
+                        <circle cx="74" cy="74" r="8" fill="#333" stroke="#555" stroke-width="1" />
+                        <circle cx="26" cy="74" r="8" fill="#333" stroke="#555" stroke-width="1" />
+                        <circle cx="74" cy="26" r="8" fill="#333" stroke="#555" stroke-width="1" />
+                    </svg>
+                </div>
+                <div class="loading-text">Production in progress</div>
+            </div>
+            <div class="production-model-explanation">
+                <h3>Our Film Production Model</h3>
+                <div class="model-diagram">
+                    <svg viewBox="0 0 300 200" class="model-svg">
+                        <!-- Producer box -->
+                        <rect x="120" y="20" width="60" height="30" rx="5" fill="#222" stroke="var(--accent-color)" stroke-width="2"/>
+                        <text x="150" y="40" text-anchor="middle" fill="var(--text-color)" font-size="12">Producer</text>
+                        
+                        <!-- Screenwriter box -->
+                        <rect x="60" y="80" width="80" height="30" rx="5" fill="#222" stroke="var(--accent-color)" stroke-width="2"/>
+                        <text x="100" y="100" text-anchor="middle" fill="var(--text-color)" font-size="12">Screenwriter</text>
+                        
+                        <!-- Director box -->
+                        <rect x="160" y="80" width="80" height="30" rx="5" fill="#222" stroke="var(--accent-color)" stroke-width="2"/>
+                        <text x="200" y="100" text-anchor="middle" fill="var(--text-color)" font-size="12">Director</text>
+                        
+                        <!-- Film output box -->
+                        <rect x="120" y="140" width="60" height="30" rx="5" fill="#222" stroke="var(--accent-color)" stroke-width="2"/>
+                        <text x="150" y="160" text-anchor="middle" fill="var(--text-color)" font-size="12">Movie</text>
+                        
+                        <!-- Connection arrows -->
+                        <line x1="150" y1="50" x2="150" y2="60" stroke="var(--secondary-text)" stroke-width="2"/>
+                        <line x1="150" y1="60" x2="100" y2="60" stroke="var(--secondary-text)" stroke-width="2"/>
+                        <line x1="150" y1="60" x2="200" y2="60" stroke="var(--secondary-text)" stroke-width="2"/>
+                        <line x1="100" y1="60" x2="100" y2="80" stroke="var(--secondary-text)" stroke-width="2"/>
+                        <line x1="200" y1="60" x2="200" y2="80" stroke="var(--secondary-text)" stroke-width="2"/>
+                        <line x1="100" y1="110" x2="100" y2="120" stroke="var(--secondary-text)" stroke-width="2"/>
+                        <line x1="200" y1="110" x2="200" y2="120" stroke="var(--secondary-text)" stroke-width="2"/>
+                        <line x1="100" y1="120" x2="150" y2="120" stroke="var(--secondary-text)" stroke-width="2"/>
+                        <line x1="200" y1="120" x2="150" y2="120" stroke="var(--secondary-text)" stroke-width="2"/>
+                        <line x1="150" y1="120" x2="150" y2="140" stroke="var(--secondary-text)" stroke-width="2"/>
+                    </svg>
+                </div>
+                <p class="model-description">Your concept moves through our virtual production team: The Producer evaluates commercial viability, the Screenwriter develops the narrative, the Director provides creative vision—resulting in a complete fictional movie.</p>
+            </div>
+        </div>
+        
+        <div class="content-area">
+            <div class="movie-showcase" id="movie-list-view">
+                <div class="movie-list-tabs">
+                    <button id="all-movies-tab" class="movie-list-tab-button active">Published Movies</button>
+                    <button id="my-movies-tab" class="movie-list-tab-button">My Movies</button>
+                </div>
+                
+                <div class="now-showing">
+                    <div class="section-title">
+                        <div class="film-strip">
+                            <svg viewBox="0 0 100 20" class="film-svg">
+                                <rect x="0" y="0" width="100" height="20" fill="#111" />
+                                <rect x="5" y="2" width="8" height="16" fill="transparent" stroke="#333" stroke-width="1" />
+                                <rect x="23" y="2" width="8" height="16" fill="transparent" stroke="#333" stroke-width="1" />
+                                <rect x="41" y="2" width="8" height="16" fill="transparent" stroke="#333" stroke-width="1" />
+                                <rect x="59" y="2" width="8" height="16" fill="transparent" stroke="#333" stroke-width="1" />
+                                <rect x="77" y="2" width="8" height="16" fill="transparent" stroke="#333" stroke-width="1" />
+                                <rect x="95" y="2" width="8" height="16" fill="transparent" stroke="#333" stroke-width="1" />
+                            </svg>
+                        </div>
+                        <h2>Now Showing</h2>
+                        <div class="film-strip">
+                            <svg viewBox="0 0 100 20" class="film-svg flip">
+                                <rect x="0" y="0" width="100" height="20" fill="#111" />
+                                <rect x="5" y="2" width="8" height="16" fill="transparent" stroke="#333" stroke-width="1" />
+                                <rect x="23" y="2" width="8" height="16" fill="transparent" stroke="#333" stroke-width="1" />
+                                <rect x="41" y="2" width="8" height="16" fill="transparent" stroke="#333" stroke-width="1" />
+                                <rect x="59" y="2" width="8" height="16" fill="transparent" stroke="#333" stroke-width="1" />
+                                <rect x="77" y="2" width="8" height="16" fill="transparent" stroke="#333" stroke-width="1" />
+                                <rect x="95" y="2" width="8" height="16" fill="transparent" stroke="#333" stroke-width="1" />
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div id="all-movies-content" class="movie-list-tab-content active">
+                        <div class="movie-grid" id="all-movies-grid">
+                            <!-- Published movies will be inserted here by JavaScript -->
+                            <div class="no-movies-message">Loading published movies...</div>
+                        </div>
+                    </div>
+                    
+                    <div id="my-movies-content" class="movie-list-tab-content">
+                        <div class="movie-grid" id="movie-grid">
+                            <!-- Local movies will be inserted here by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="movie-details-view" id="movie-details-view">
+                <div class="details-nav">
+                    <button class="back-button" id="back-to-list">← Back to Movies</button>
+                </div>
+                <div class="movie-details" id="movie-details">
+                    <div class="detail-header">
+                        <h2 id="detail-title"></h2>
+                        <div class="detail-header-info">
+                            <div class="header-metadata">
+                                <span id="detail-year"></span> | <span id="detail-runtime"></span> | <span id="detail-rating"></span>
+                            </div>
+                            <div class="header-rating">
+                                <div class="star-rating" id="star-rating">
+                                    <!-- Stars will be generated by JS -->
+                                </div>
+                                <span class="rating-value" id="rating-value"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="movie-content">
+                        <div class="detail-poster-container">
+                            <div class="detail-poster" id="detail-poster"></div>
+                            <div class="detail-key-info">
+                                <div class="detail-director">Director: <span id="detail-director"></span></div>
+                                <div class="detail-stars">Starring: <span id="detail-stars"></span></div>
+                                <div class="detail-genres" id="detail-genres"></div>
+                            </div>
+                            <div class="detail-actions">
+                                <button id="save-button" class="detail-action-button">
+                                    <span class="action-icon">💾</span> Save Movie
+                                </button>
+                                <button id="publish-button" class="detail-action-button primary">
+                                    <span class="action-icon">🌐</span> Publish Movie
+                                </button>
+                            </div>
+                        </div>
+                        <div class="detail-info">
+                            <h3 class="synopsis-header">Synopsis</h3>
+                            <div class="detail-description" id="detail-description"></div>
+                            
+                            <div class="tabs">
+                                <button id="reviews-tab" class="tab-button">Audience Reviews</button>
+                                <button id="production-tab" class="tab-button">Production Notes</button>
+                            </div>
+                            
+                            <div id="reviews-content" class="tab-content">
+                                <div class="detail-reviews">
+                                    <h3>Critical Acclaim</h3>
+                                    <div id="detail-reviews"></div>
+                                </div>
+                                
+                                <div class="user-comments">
+                                    <h3>Audience Reviews</h3>
+                                    <div id="user-comments" class="comments-container"></div>
+                                </div>
+                            </div>
+                            
+                            <div id="production-content" class="tab-content">
+                                <div class="production-notes">
+                                    <h3>Production Notes</h3>
+                                    <div id="production-notes-content"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <div class="footer-content">
+                <p>AI Cinema - Where imagination meets the silver screen</p>
+                <p class="disclaimer">All movies featured are entirely fictional and generated by AI.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
