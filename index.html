@@ -2,177 +2,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>McDonald's Menu Digital</title>
+    <title>RestaurantApp - Carta Digital</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="importmap">
+        {
+            "imports": {
+                "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+            }
+        }
+    </script>
 </head>
 <body>
-    <header>
-        <div class="logo-container">
-            <svg class="logo" viewBox="0 0 48 36" xmlns="http://www.w3.org/2000/svg">
-                <path d="M46.92 10.78c0 5.72-4.3 10.35-9.61 10.35s-9.61-4.63-9.61-10.35c0-5.72 4.3-10.35 9.61-10.35s9.61 4.63 9.61 10.35z" fill="#FF0000"/>
-                <path d="M29.79 10.78c0 5.72-4.3 10.35-9.61 10.35s-9.61-4.63-9.61-10.35c0-5.72 4.3-10.35 9.61-10.35s9.61 4.63 9.61 10.35z" fill="#FF0000"/>
-                <path d="M12.67 10.78c0 5.72-4.3 10.35-9.61 10.35S-6.55 16.5-6.55 10.78C-6.55 5.06-2.25.43 3.06.43s9.61 4.63 9.61 10.35z" fill="#FF0000"/>
-                <path d="M3.06 23.9c2.26 0 4.3-.93 5.78-2.45.4-.4.75-.86 1.05-1.36.3-.48.54-1 .73-1.54h6.09c.18.54.43 1.07.73 1.57.3.5.65.96 1.05 1.36 1.47 1.48 3.51 2.4 5.77 2.4 2.26 0 4.3-.93 5.78-2.45.4-.4.75-.86 1.05-1.36.3-.48.54-1 .73-1.54h6.09c.18.54.43 1.07.73 1.57.3.5.65.96 1.05 1.36 1.47 1.48 3.51 2.4 5.77 2.4.8 0 1.58-.12 2.31-.34v11.5H1.01v-11.7c.68.12 1.34.2 2.05.2z" fill="#FFCC00"/>
-            </svg>
-        </div>
-        <div class="header-options">
-            <a href="#" class="active">Para comer aquí</a>
-            <a href="#">Para llevar</a>
-        </div>
-    </header>
-    
-    <div class="categories-slider">
-        <div class="category active">
-            <i class="fas fa-utensils"></i>
-            <span>Sugerencias</span>
-        </div>
-        <div class="category">
-            <i class="fas fa-hamburger"></i>
-            <span>Hamburguesas</span>
-        </div>
-        <div class="category">
-            <i class="fas fa-drumstick-bite"></i>
-            <span>Pollo</span>
-        </div>
-        <div class="category">
-            <i class="fas fa-french-fries"></i>
-            <span>Patatas</span>
-        </div>
-        <div class="category">
-            <i class="fas fa-coffee"></i>
-            <span>Bebidas</span>
-        </div>
-        <div class="category">
-            <i class="fas fa-ice-cream"></i>
-            <span>Postres</span>
-        </div>
-        <div class="category">
-            <i class="fas fa-child"></i>
-            <span>Happy Meal</span>
-        </div>
-        <div class="category">
-            <i class="fas fa-percentage"></i>
-            <span>Promociones</span>
-        </div>
-    </div>
-    
-    <main>
-        <section class="products-grid">
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://cdn.sanity.io/images/czqk28jt/prod_bk_es/84006f55cbd84ccd51d368cec00b40e4b2c0b404-1333x1333.png" alt="Big Mac">
+    <div id="app">
+        <header>
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40">
+                    <circle cx="20" cy="20" r="18" fill="#e74c3c"/>
+                    <path d="M12,20 C12,15 16,12 20,12 C24,12 28,15 28,20 L26,30 L14,30 L12,20 Z" fill="#fff"/>
+                    <circle cx="15" cy="18" r="1.5" fill="#e74c3c"/>
+                    <circle cx="25" cy="18" r="1.5" fill="#e74c3c"/>
+                </svg>
+                <h1>RestaurantApp</h1>
+            </div>
+            <div class="cart-icon" @click="toggleCart">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" v-if="cartItems.length > 0">{{ cartItems.length }}</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="categories">
+                <button 
+                    v-for="category in categories" 
+                    :key="category.id" 
+                    @click="selectCategory(category)"
+                    :class="{ active: selectedCategory === category }">
+                    <i :class="category.icon"></i>
+                    {{ category.name }}
+                </button>
+            </div>
+
+            <div class="products">
+                <div 
+                    v-for="product in filteredProducts" 
+                    :key="product.id" 
+                    class="product-card"
+                    @click="showProductDetails(product)">
+                    <div class="product-img">
+                        <svg :width="100" :height="100" viewBox="0 0 100 100">
+                            <circle :cx="50" :cy="50" :r="45" :fill="product.color" />
+                            <path :d="product.svgPath" fill="#fff" />
+                        </svg>
+                    </div>
+                    <div class="product-info">
+                        <h3>{{ product.name }}</h3>
+                        <p class="description">{{ product.description }}</p>
+                        <p class="price">{{ formatPrice(product.price) }}</p>
+                    </div>
                 </div>
-                <div class="product-info">
-                    <h3>Big Mac</h3>
-                    <p class="price">5.95 €</p>
-                    <p class="calories">495 kcal</p>
+            </div>
+        </main>
+
+        <!-- Modal detalles de producto -->
+        <div class="modal" v-if="selectedProduct" @click.self="closeModal">
+            <div class="modal-content">
+                <button class="close-btn" @click="closeModal">&times;</button>
+                <div class="modal-product">
+                    <div class="product-img large">
+                        <svg :width="150" :height="150" viewBox="0 0 100 100">
+                            <circle :cx="50" :cy="50" :r="45" :fill="selectedProduct.color" />
+                            <path :d="selectedProduct.svgPath" fill="#fff" />
+                        </svg>
+                    </div>
+                    <h2>{{ selectedProduct.name }}</h2>
+                    <p class="description">{{ selectedProduct.description }}</p>
+                    <p class="price">{{ formatPrice(selectedProduct.price) }}</p>
+                    
+                    <div class="quantity-control">
+                        <button @click="decreaseQuantity">-</button>
+                        <span>{{ quantity }}</span>
+                        <button @click="increaseQuantity">+</button>
+                    </div>
+                    
+                    <button class="add-to-cart" @click="addToCart">
+                        Añadir al carrito - {{ formatPrice(selectedProduct.price * quantity) }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel del carrito -->
+        <div class="cart-panel" :class="{ open: isCartOpen }">
+            <div class="cart-header">
+                <h2>Tu pedido</h2>
+                <button class="close-btn" @click="toggleCart">&times;</button>
+            </div>
+            
+            <div class="cart-items" v-if="cartItems.length > 0">
+                <div v-for="(item, index) in cartItems" :key="index" class="cart-item">
+                    <div class="item-info">
+                        <h3>{{ item.product.name }}</h3>
+                        <p>{{ item.quantity }} x {{ formatPrice(item.product.price) }}</p>
+                    </div>
+                    <div class="item-actions">
+                        <p class="item-total">{{ formatPrice(item.product.price * item.quantity) }}</p>
+                        <button class="remove-btn" @click="removeFromCart(index)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://mcdonalds.es/api/cms/images/mcdonalds-es/d32f6618-e3de-4671-8f3a-b9f8a977ff0b_1080x943_cuarto-libra-queso.png" alt="Cuarto de Libra">
+            <div class="cart-empty" v-else>
+                <i class="fas fa-shopping-basket"></i>
+                <p>Tu carrito está vacío</p>
+            </div>
+            
+            <div class="cart-summary" v-if="cartItems.length > 0">
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span>{{ formatPrice(cartSubtotal) }}</span>
                 </div>
-                <div class="product-info">
-                    <h3>Cuarto de Libra</h3>
-                    <p class="price">5.50 €</p>
-                    <p class="calories">510 kcal</p>
+                <div class="summary-row">
+                    <span>IVA (10%):</span>
+                    <span>{{ formatPrice(cartTax) }}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span>{{ formatPrice(cartTotal) }}</span>
                 </div>
             </div>
             
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://mcdonalds.es/api/cms/images/mcdonalds-es/328e4b9c-6908-4cb9-af4f-5f819b277827_1080x943_CBO.png" alt="CBO">
-                </div>
-                <div class="product-info">
-                    <h3>CBO</h3>
-                    <p class="price">6.75 €</p>
-                    <p class="calories">675 kcal</p>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://mcdonalds.es/api/cms/images/mcdonalds-es/c5a6189e-c2f9-4265-92ab-a2225234079c_1080x943_Grand-McExtreme-de-McDonald-s-Bacon.png" alt="Grand McExtreme Bacon">
-                </div>
-                <div class="product-info">
-                    <h3>Grand McExtreme Bacon</h3>
-                    <p class="price">7.25 €</p>
-                    <p class="calories">710 kcal</p>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://mcdonalds.es/api/cms/images/mcdonalds-es/a8841e31-e77d-489b-995b-6e6f93c34a2c_producto-McMenu-Mediano-BigMac.png" alt="McMenu Big Mac">
-                </div>
-                <div class="product-info">
-                    <h3>McMenu Big Mac</h3>
-                    <p class="price">8.95 €</p>
-                    <p class="calories">855 kcal</p>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://mcdonalds.es/api/cms/images/mcdonalds-es/6bc8a469-1f12-4602-b060-a65a9148113a_1080x943_McChicken.png" alt="McChicken">
-                </div>
-                <div class="product-info">
-                    <h3>McChicken</h3>
-                    <p class="price">4.95 €</p>
-                    <p class="calories">400 kcal</p>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://mcdonalds.es/api/cms/images/mcdonalds-es/dd2946bc-3061-4d7e-ab5a-47e69e107531_1080x943_McNuggets-6-unidades.png" alt="McNuggets 6 unidades">
-                </div>
-                <div class="product-info">
-                    <h3>McNuggets 6 unidades</h3>
-                    <p class="price">4.75 €</p>
-                    <p class="calories">259 kcal</p>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://mcdonalds.es/api/cms/images/mcdonalds-es/9b8d53c7-5238-459a-b968-06d016cadf0e_1080x943_PatatasFritas.png" alt="Patatas Medianas">
-                </div>
-                <div class="product-info">
-                    <h3>Patatas Medianas</h3>
-                    <p class="price">2.50 €</p>
-                    <p class="calories">330 kcal</p>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://mcdonalds.es/api/cms/images/mcdonalds-es/e89f08c6-0c65-46b7-a461-681f9ae6ac7d_1080x943_McFlurry-KitKat.png" alt="McFlurry KitKat">
-                </div>
-                <div class="product-info">
-                    <h3>McFlurry KitKat</h3>
-                    <p class="price">3.50 €</p>
-                    <p class="calories">385 kcal</p>
-                </div>
-            </div>
-        </section>
-    </main>
-    
-    <footer>
-        <div class="cart-summary">
-            <div class="cart-info">
-                <span class="cart-count">0 productos</span>
-                <span class="cart-total">0.00 €</span>
-            </div>
-            <button class="cart-button" disabled>
-                Pagar
-                <i class="fas fa-chevron-right"></i>
+            <button class="checkout-btn" v-if="cartItems.length > 0" @click="checkout">
+                Realizar pedido
             </button>
         </div>
-    </footer>
-    
-    <script src="script.js"></script>
+
+        <!-- Overlay para cuando el carrito está abierto -->
+        <div class="overlay" v-if="isCartOpen" @click="toggleCart"></div>
+        
+        <!-- Modal de confirmación de pedido -->
+        <div class="modal" v-if="showOrderConfirmation" @click.self="showOrderConfirmation = false">
+            <div class="modal-content">
+                <button class="close-btn" @click="showOrderConfirmation = false">&times;</button>
+                <div class="confirmation-content">
+                    <i class="fas fa-check-circle"></i>
+                    <h2>¡Pedido realizado con éxito!</h2>
+                    <p>Tu número de pedido es: <strong>{{ orderNumber }}</strong></p>
+                    <p>Puedes recogerlo en caja cuando esté listo.</p>
+                    <button class="primary-btn" @click="startNewOrder">Realizar otro pedido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
 </body>
 </html>
